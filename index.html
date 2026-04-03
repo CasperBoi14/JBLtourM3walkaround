@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JBL - Tour One M3</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- GSAP for Scrolling Animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <!-- Lenis Check -->
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
+    <!-- Three.js + GLTFLoader -->
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.154.0/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.154.0/examples/jsm/"
+        }
+    }
+    </script>
+</head>
+<body>
+    
+    <!-- 3D Canvas Background -->
+    <canvas id="webgl"></canvas>
+    
+    <!-- UI Container -->
+    <main class="content">
+        <!-- Hero Section -->
+        <section class="section hero">
+            <header>
+                <div class="logo">JBL TOUR</div>
+                <nav>
+                    <a href="https://support.jbl.com/nl/nl/contact.html" target="_blank" rel="noopener noreferrer">Contact</a>
+                    <a href="https://www.jbl.nl/TOUR-ONE-M3.html" target="_blank" rel="noopener noreferrer">Shop</a>
+                </nav>
+            </header>
+            
+            <div class="hero-content">
+                <div class="capsule">
+                    <span class="dot"></span>
+                    <div class="text">
+                        <strong>NEXT LEVEL </strong>
+                        <span>Experience the future of sound</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="scroll-indicator">
+                <p>Scroll down</p>
+                <div class="line"></div>
+            </div>
+        </section>
+
+        <!-- Core Power Section -->
+        <section class="section specs" id="specs">
+            <div class="feature-container">
+                <div class="feature-block reveal-up">
+                    <div class="icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                    </div>
+                    <h3>Core Power</h3>
+                    <p>40mm dynamic drivers delivering a 10 Hz to 40 kHz frequency range for crystal clear audio.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Spatial Audio Section -->
+        <section class="section spatial" id="spatial">
+            <div class="feature-container">
+                <div class="feature-block reveal-up">
+                    <div class="icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg>
+                    </div>
+                    <h3>Spatial Audio</h3>
+                    <p>JBL Spatial 360 Sound with built-in head tracking and lossless Hi-Res delivery via LDAC.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Noise & Smart Section -->
+        <section class="section smart" id="smart">
+            <div class="feature-container">
+                <div class="feature-block reveal-up">
+                    <div class="icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" x2="12" y1="19" y2="22"></line><line x1="1" x2="23" y1="1" y2="23"></line></svg>
+                    </div>
+                    <h3>True Adaptive NC</h3>
+                    <p>8 microphones powering True Adaptive Noise Cancelling 2.0 with Ambient Aware & TalkThru.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Brain Integrated Section -->
+        <section class="section brain" id="brain">
+            <div class="feature-container">
+                <div class="feature-block reveal-up">
+                    <div class="icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-3.18-4.52 2.5 2.5 0 0 1-1.1-3.18A2.5 2.5 0 0 1 2.2 4.96 2.5 2.5 0 0 1 4.5 2z"></path><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 3.18-4.52 2.5 2.5 0 0 0 1.1-3.18 2.5 2.5 0 0 0-2.4-4.2A2.5 2.5 0 0 0 19.5 2z"></path></svg>
+                    </div>
+                    <h3>Brain Integrated</h3>
+                    <p>Seamlessly pair with Google Fast Pair while an AI algorithm optimizes your vocal calls.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Details Section -->
+        <section class="section details" id="details">
+            <div class="feature-container">
+                <div class="feature-block reveal-up">
+                    <div class="icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="16" height="10" x="2" y="7" rx="2" ry="2"></rect><line x1="22" x2="22" y1="11" y2="13"></line><line x1="6" x2="6" y1="11" y2="13"></line><line x1="10" x2="10" y1="11" y2="13"></line><line x1="14" x2="14" y1="11" y2="13"></line></svg>
+                    </div>
+                    <h3>70 Hours Battery</h3>
+                    <p>Massive 70-hour playback with rapid charging giving you 5 hours in just 5 minutes.</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Connection Section -->
+        <section class="section connection" id="connection">
+            <div class="feature-container">
+                <div class="feature-block reveal-up">
+                    <div class="icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m4.9 19.1 14.2-14.2"></path><path d="M4.9 4.9l14.2 14.2"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                    </div>
+                    <h3>Flawless Connection</h3>
+                    <p>Bluetooth 5.3 with multipoint support, Auracast, and lossless USB-C wired mode.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Final section -->
+        <section class="section end">
+            <div class="marketing-text reveal-up">
+                <h2>“Premium wireless headphones with adaptive noise cancelling, spatial audio, and up to 70 hours battery life—   built for travel, work, and immersive listening.”</h2>
+                <button class="buy-btn">Order Now</button>
+            </div>
+        </section>
+    </main>
+    
+    <button class="autoscroll-btn">Auto-scroll</button>
+    
+    <script type="module" src="main.js"></script>
+</body>
+</html>

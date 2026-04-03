@@ -1,0 +1,327 @@
+:root {
+  --bg-color: #948b9d; /* Match the lavender background */
+  --text-color: #ffffff;
+  --card-bg: rgba(255, 255, 255, 0.15); /* White frosted glass */
+  --card-border: rgba(255, 255, 255, 0.4);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Manrope', sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  overflow-x: hidden;
+}
+
+#webgl {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.content {
+  position: relative;
+  z-index: 2;
+}
+
+.section {
+  min-height: 100vh;
+  width: 100vw;
+  padding: 4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+}
+
+/* Header */
+header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 2rem 4rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 10;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 300;
+  letter-spacing: 2px;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  margin-left: 2rem;
+  font-size: 0.9rem;
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+}
+
+nav a:hover {
+  opacity: 1;
+}
+
+/* UI Elements */
+.capsule {
+  position: absolute;
+  left: 4rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: white;
+  color: #333;
+  padding: 1rem 2rem 1rem 1rem;
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  max-width: 300px;
+}
+
+.capsule .dot {
+  width: 40px;
+  height: 40px;
+  background: #333; /* For an image replacement if needed */
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.capsule .text {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.85rem;
+}
+
+.capsule .text strong {
+  font-weight: 600;
+}
+
+/* Scroll indicator */
+.scroll-indicator {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  opacity: 0.6;
+}
+
+.scroll-indicator p {
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.scroll-indicator .line {
+  width: 1px;
+  height: 50px;
+  background: white;
+  animation: scrollDown 2s infinite ease-in-out;
+}
+
+@keyframes scrollDown {
+  0% { transform: scaleY(0); transform-origin: top; }
+  50% { transform: scaleY(1); transform-origin: top; }
+  50.1% { transform: scaleY(1); transform-origin: bottom; }
+  100% { transform: scaleY(0); transform-origin: bottom; }
+}
+
+/* Grid Layout */
+.feature-container {
+  display: flex;
+  flex-direction: column;
+  gap: 5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 4rem 0;
+}
+
+.feature-block {
+  padding: 2rem;
+  color: white;
+  will-change: opacity;
+  opacity: 0; /* JS will animate this */
+  transform: translateY(30px) translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.feature-block .icon {
+  margin-bottom: 1rem;
+}
+
+.feature-block h3 {
+  font-size: 3rem;
+  font-weight: 300;
+  margin-bottom: 1rem;
+}
+
+.feature-block p {
+  font-size: 1.2rem;
+  line-height: 1.6;
+}
+
+/* Sections alignment */
+.specs {
+  align-items: flex-end; /* Cards on right, model on left */
+}
+.specs .feature-container {
+  margin: 0 0 0 auto;
+  width: 50%;
+}
+
+.spatial {
+  align-items: flex-start; /* Cards on left, model on right */
+}
+.spatial .feature-container {
+  margin: 0 auto 0 10%;
+  width: 50%;
+}
+
+.smart {
+  align-items: flex-end; /* Cards on right, model on left */
+}
+.smart .feature-container {
+  margin: 0 0 0 auto;
+  width: 50%;
+}
+
+.brain {
+  align-items: flex-start; /* Cards on left, model on right */
+}
+.brain .feature-container {
+  margin: 0 auto 0 10%;
+  width: 50%;
+}
+
+.details {
+  align-items: flex-end; /* Cards on right, model on left */
+}
+.details .feature-container {
+  margin: 0 0 0 auto;
+  width: 50%;
+}
+
+.connection {
+  align-items: flex-start; /* Cards on left, model on right */
+}
+.connection .feature-container {
+  margin: 0 auto 0 10%;
+  width: 50%;
+}
+
+.end {
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+}
+
+.marketing-text {
+  max-width: 800px;
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.marketing-text h2 {
+  font-size: 2.5rem;
+  font-weight: 300;
+  line-height: 1.4;
+  margin-bottom: 3rem;
+}
+
+.buy-btn {
+  background: white;
+  color: #333;
+  border: none;
+  padding: 1rem 3rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 30px;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.buy-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 20px rgba(255,255,255,0.3);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .specs .feature-container, .spatial .feature-container, .smart .feature-container, .brain .feature-container, .details .feature-container, .connection .feature-container {
+    width: 100%;
+    margin-left: 0;
+  }
+}
+
+/* Cursor Sound Waves */
+.cursor-sound-wave {
+  position: fixed;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  pointer-events: none;
+  transform: translate(-50%, -50%) scale(1);
+  z-index: 9999;
+  animation: expandWave 0.8s ease-out forwards;
+}
+
+@keyframes expandWave {
+  0% {
+    width: 10px;
+    height: 10px;
+    opacity: 0.8;
+  }
+  100% {
+    width: 60px;
+    height: 60px;
+    opacity: 0;
+  }
+}
+
+/* Auto-scroll button */
+.autoscroll-btn {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 100;
+  background: white;
+  color: #333;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 30px;
+  cursor: pointer;
+  font-family: 'Manrope', sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  transition: transform 0.3s ease, background 0.3s ease;
+}
+
+.autoscroll-btn:hover {
+  transform: scale(1.05);
+  background: #eee;
+}
+
