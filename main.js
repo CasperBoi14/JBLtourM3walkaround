@@ -166,6 +166,10 @@ const loader = new GLTFLoader();
 const modelGroup = new THREE.Group();
 scene.add(modelGroup);
 
+const loadingScreen = document.getElementById('loading-screen');
+const loadingBar = document.getElementById('loading-bar');
+const loadingText = document.getElementById('loading-text');
+
 loader.load(
   './source/jbl-tour-one-m3-black-android-ar-asset.glb',
   (gltf) => {
@@ -185,12 +189,23 @@ loader.load(
 
     modelGroup.add(headphoneModel);
 
-    // Setup animations after loading
-    setupAnimations();
+    // Give a slight delay before removing the loader to ensure a smooth transition
+    setTimeout(() => {
+        loadingScreen.classList.add('hidden');
+        // Setup animations after loading
+        setupAnimations();
+    }, 500);
   },
-  undefined,
+  (xhr) => {
+    if (xhr.lengthComputable) {
+        const percentComplete = (xhr.loaded / xhr.total) * 100;
+        loadingBar.style.width = percentComplete + '%';
+        loadingText.innerText = `Loading ${Math.round(percentComplete)}%`;
+    }
+  },
   (error) => {
     console.error('Error loading model:', error);
+    loadingText.innerText = 'Error loading model';
   }
 );
 
