@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 
 // ---- Smooth Scroll (Lenis) ----
 const lenis = new Lenis({
@@ -81,17 +82,40 @@ const renderer = new THREE.WebGLRenderer({
 renderer.setSize(sizes.width, sizes.height);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-// ---- Lighting ----
-const ambientLight = new THREE.AmbientLight(0xffffff, 2.5);
+// Improved Rendering settings for realism
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.0;
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+// ---- Environment and Lighting Setup ----
+const pmremGenerator = new THREE.PMREMGenerator(renderer);
+scene.environment = pmremGenerator.fromScene(new RoomEnvironment(), 0.04).texture;
+
+// Soft ambient light
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
 scene.add(ambientLight);
 
-const directionalLight = new THREE.DirectionalLight(0xffffff, 4);
-directionalLight.position.set(1, 2, 3);
-scene.add(directionalLight);
+// Key Light - main source of illumination
+const keyLight = new THREE.DirectionalLight(0xffffff, 2.0);
+keyLight.position.set(5, 5, 5);
+keyLight.castShadow = true;
+keyLight.shadow.mapSize.width = 2048;
+keyLight.shadow.mapSize.height = 2048;
+keyLight.shadow.bias = -0.0001;
+scene.add(keyLight);
 
-const directionalLight2 = new THREE.DirectionalLight(0xaabbff, 3);
-directionalLight2.position.set(-1, -1, -1);
-scene.add(directionalLight2);
+// Fill Light - softens the shadows on the opposite side
+const fillLight = new THREE.DirectionalLight(0xe0e7ff, 1.0);
+fillLight.position.set(-5, 0, -5);
+scene.add(fillLight);
+
+// Rim Light - highlights the edges for a premium look
+const rimLight = new THREE.SpotLight(0xffffff, 5);
+rimLight.position.set(0, 5, -10);
+rimLight.angle = Math.PI / 6;
+rimLight.penumbra = 1;
+scene.add(rimLight);
 
 // ---- Elegant Floating Audio Waves Background ----
 const elementCount = 75; // Less elements for a cleaner, premium look
@@ -103,17 +127,17 @@ const arcGeometry = new THREE.TorusGeometry(0.3, 0.015, 16, 64, Math.PI * 1.2);
 const discGeometry = new THREE.CylinderGeometry(0.15, 0.15, 0.02, 32);
 const capsuleGeometry = new THREE.CapsuleGeometry(0.04, 0.15, 4, 16);
 
-// Premium frosted glass / dark chrome material
+// Premium minimalist material
 const elementMaterial = new THREE.MeshPhysicalMaterial({
-    color: 0x99aaff, // subtle blue tint
-    metalness: 0.5,
-    roughness: 0.2,
-    transmission: 0.9, // glass-like
-    thickness: 0.5,
+    color: 0x222222, // Very dark, minimalist grey
+    metalness: 0.1,
+    roughness: 0.8,
+    transmission: 0.1,
+    thickness: 0.1,
     transparent: true,
-    opacity: 0.6,
-    clearcoat: 1.0,
-    clearcoatRoughness: 0.1
+    opacity: 0.3,
+    clearcoat: 0.2,
+    clearcoatRoughness: 0.8
 });
 
 for(let i = 0; i < elementCount; i++) {
@@ -180,10 +204,21 @@ loader.load(
     headphoneModel.rotation.set(0.2, (Math.PI / 180) * 20, 0); 
     headphoneModel.scale.set(15, 15, 15); // Start a bit bigger, but keep fully on screen
 
-    // Make the model a darker blue-ish black
+    // Enhance materials and apply shadows
     headphoneModel.traverse((child) => {
-        if (child.isMesh && child.material) {
-            child.material.color.setHex(0x0c111a); // Dark blue-ish black
+        if (child.isMesh) {
+            child.castShadow = true;
+            child.receiveShadow = true;
+            if (child.material) {
+                child.material.color.setHex(0x11131a); // Adjusted deep dark tone
+                child.material.envMapIntensity = 1.2;
+                if (child.material.roughness !== undefined && child.material.roughness > 0.6) {
+                   child.material.roughness = 0.5;
+                }
+                if (child.material.metalness !== undefined) {
+                   child.material.metalness = Math.max(0.2, child.material.metalness);
+                }
+            }
         }
     });
 
@@ -260,6 +295,15 @@ function createSoundWave(x, y) {
   }, 800);
 }
 
+// ---- Continuous Auto-Sliding UI Effect ----
+const autoSliders = document.querySelectorAll('.sliders input[type="range"]');
+autoSliders.forEach((slider, index) => {
+    // Give each slider a unique speed, offset, and amplitude
+    slider.dataset.speed = (Math.random() * 1.5 + 0.5) * 0.001; 
+    slider.dataset.offset = Math.random() * Math.PI * 2;
+    slider.dataset.range = parseFloat(slider.max || 100) - parseFloat(slider.min || 0);
+});
+
 // ---- Animation Loop ----
 const clock = new THREE.Clock();
 
@@ -294,6 +338,18 @@ function tick() {
         child.position.x += Math.sin(elapsedTime * 2 + child.userData.startY) * 0.002;
     });
   }
+
+  // Continuously animate UI sliders gracefully
+  autoSliders.forEach(slider => {
+    const min = parseFloat(slider.min) || 0;
+    const range = parseFloat(slider.dataset.range);
+    const speed = parseFloat(slider.dataset.speed);
+    const offset = parseFloat(slider.dataset.offset);
+    
+    // Sine wave motion pattern between 15% and 85% of full range to make it feel natural
+    const sineWave = (Math.sin((Date.now() * speed) + offset) + 1) / 2;
+    slider.value = min + (range * (0.15 + (sineWave * 0.70))); // Oscillates automatically
+  });
 
   renderer.render(scene, camera);
   window.requestAnimationFrame(tick);
@@ -406,7 +462,27 @@ function setupAnimations() {
     ease: "power2.inOut"
   }, "<");
 
-  // Section 8 (End) - Center and scale down to 8
+  // Section 8 (EQ Settings) - Center top, tilt to see earcups
+  tl.to(headphoneModel.position, {
+    x: 0,
+    y: 1.5,
+    z: 2.5,
+    ease: "power2.inOut"
+  });
+  tl.to(headphoneModel.rotation, {
+    x: Math.PI / 2.2,
+    y: 0,
+    z: Math.PI,
+    ease: "power2.inOut"
+  }, "<");
+  tl.to(headphoneModel.scale, {
+    x: 9, 
+    y: 9, 
+    z: 9,
+    ease: "power2.inOut"
+  }, "<");
+
+  // Section 9 (End) - Center and scale down to 8
   tl.to(headphoneModel.position, {
     x: 0,
     y: -0.7,
@@ -414,8 +490,8 @@ function setupAnimations() {
     ease: "power2.inOut"
   });
   tl.to(headphoneModel.rotation, {
-    x: 0.1,
-    y: 0,
+    x: -0.2,
+    y: Math.PI * 2,
     z: 0,
     ease: "power2.inOut"
   }, "<");
